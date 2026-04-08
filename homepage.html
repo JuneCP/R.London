@@ -195,35 +195,6 @@
   }
   .price-new { font-size: 17px; font-weight: 600; color: var(--ink); }
   .price-new.sale { color: var(--red); }
-  /* ---- MEMBER PRICE ---- */
-  .member-price-row {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 4px;
-  }
-  .member-badge {
-    background: #C0392B; color: #fff;
-    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; padding: 2px 7px; border-radius: 50px;
-    flex-shrink: 0;
-  }
-  .member-price {
-    font-size: 15px; font-weight: 700; color: #C0392B;
-  }
-
-  /* ---- RECO ADD-ON DEAL ---- */
-  .addon-badge {
-    display: inline-block;
-    background: linear-gradient(90deg, #B8935A, #d4aa70);
-    color: #fff; font-size: 9px; font-weight: 700;
-    letter-spacing: 0.09em; text-transform: uppercase;
-    padding: 2px 8px; border-radius: 50px; margin-bottom: 4px;
-  }
-  .reco-addon-price {
-    font-size: 13px; font-weight: 700; color: #B8935A;
-    display: block; line-height: 1.2;
-  }
-  .reco-price-new.addon-deal { color: #B8935A; }
-
   .add-cart-btn {
     width: 100%; background: var(--tiffany-pale);
     border: 1.5px solid var(--tiffany);
@@ -423,31 +394,6 @@
     background: var(--white);
     flex-shrink: 0;
   }
-  /* ---- MEMBER DRAWER PRICING ---- */
-  .member-greeting {
-    font-size: 12px; color: var(--tiffany-dark); font-weight: 600;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
-  }
-  .member-greeting::before {
-    content: '★'; font-size: 11px;
-  }
-  .price-breakdown { margin-bottom: 14px; }
-  .price-breakdown-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 5px 0;
-    font-size: 13px;
-  }
-  .price-breakdown-row.original { color: var(--ink-soft); }
-  .price-breakdown-row.discount { color: #C0392B; font-weight: 500; }
-  .price-breakdown-row.member-total {
-    border-top: 2px solid var(--border);
-    margin-top: 4px; padding-top: 10px;
-    font-weight: 700; font-size: 15px; color: var(--ink);
-  }
-  .price-breakdown-label { letter-spacing: 0.04em; }
-  .price-breakdown-val { font-weight: 600; }
-
   .subtotal-row {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 14px;
@@ -577,26 +523,7 @@
   </div>
 
   <div class="drawer-footer">
-    <div id="memberGreeting" style="display:none;" class="member-greeting">Member Prices Applied</div>
-
-    <!-- Member breakdown (shown when logged in as member) -->
-    <div id="memberPriceBreakdown" style="display:none;" class="price-breakdown">
-      <div class="price-breakdown-row original">
-        <span class="price-breakdown-label">Original Price</span>
-        <span class="price-breakdown-val" id="breakdownOriginal">£0.00</span>
-      </div>
-      <div class="price-breakdown-row discount">
-        <span class="price-breakdown-label">Member Discount</span>
-        <span class="price-breakdown-val" id="breakdownDiscount">−£0.00</span>
-      </div>
-      <div class="price-breakdown-row member-total">
-        <span class="price-breakdown-label">Your Price</span>
-        <span class="price-breakdown-val" id="breakdownMemberTotal">£0.00</span>
-      </div>
-    </div>
-
-    <!-- Standard subtotal (shown when not a member) -->
-    <div class="subtotal-row" id="standardSubtotalRow">
+    <div class="subtotal-row">
       <span class="subtotal-label">Subtotal</span>
       <span class="subtotal-val" id="subtotalVal">£0.00</span>
     </div>
@@ -1105,25 +1032,9 @@ let cartTotal = 0;
 let cartCount = 0;
 let currentProduct = null;
 
-// ---- MEMBER PRICE: assign randomly to ~half of products (5–15% off) ----
-// Use a seeded approach so it's consistent per page load but varied across products
-const MEMBER_PRODUCT_IDS = new Set(
-  PRODUCTS
-    .filter((_, i) => [1,3,5,7,9,11,13,16,18,20].includes(i + 1))  // roughly half
-    .map(p => p.id)
-);
-function getMemberPrice(p) {
-  if (!MEMBER_PRODUCT_IDS.has(p.id)) return null;
-  // Discount between 5% and 15%, rounded to nearest penny
-  const discounts = [0.05, 0.07, 0.08, 0.10, 0.12, 0.13, 0.15];
-  const pct = discounts[p.id % discounts.length];
-  return Math.round(p.price * (1 - pct) * 100) / 100;
-}
-
 // ---- RENDER PRODUCTS ----
 const grid = document.getElementById('productGrid');
 PRODUCTS.forEach(p => {
-  const memberPrice = getMemberPrice(p);
   const card = document.createElement('div');
   card.className = 'product-card';
   card.innerHTML = `
@@ -1132,33 +1043,20 @@ PRODUCTS.forEach(p => {
       ${getIcon(p.icon)}
     </div>
     <div class="product-info">
+      
       <div class="product-name">${p.name}</div>
-      ${memberPrice ? `
-      <div class="member-price-row">
-        <span class="member-badge">Member</span>
-        <span class="member-price">£${memberPrice.toFixed(2)}</span>
-      </div>` : ''}
       <div class="product-price-row">
         <div>
           ${p.old ? `<span class="price-old">£${p.old.toFixed(2)}</span>` : ''}
         </div>
-        <span class="price-new${p.old ? ' sale' : ''}" style="${memberPrice ? 'font-size:13px;color:var(--ink-soft);text-decoration:line-through;font-weight:400;' : ''}">£${p.price.toFixed(2)}</span>
+        <span class="price-new${p.old ? ' sale' : ''}">£${p.price.toFixed(2)}</span>
       </div>
-      <button class="add-cart-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+      <button class="add-cart-btn" onclick="addToCart(${p.id})">Add to Basket</button>
     </div>
   `;
   grid.appendChild(card);
 });
 
-
-// ---- ADD-ON DEAL: assign to every other reco item ----
-function getAddonPrice(product, index) {
-  // Every other reco gets an add-on deal (alternating by index)
-  if (index % 2 !== 0) return null;
-  const discounts = [0.10, 0.12, 0.08, 0.15, 0.09];
-  const pct = discounts[product.id % discounts.length];
-  return Math.round(product.price * (1 - pct) * 100) / 100;
-}
 
 function updateRecommendations(name) {
     const recoList = document.getElementById('recoList');
@@ -1184,8 +1082,6 @@ function updateRecommendations(name) {
     currentRecoItems = recosToRender;
     
     recosToRender.forEach((r, i) => {
-      const addonPrice = getAddonPrice(r, i);
-      const displayPrice = addonPrice !== null ? addonPrice : r.price;
       const div = document.createElement('div');
       div.className = 'reco-card';
       div.id = `reco-${r.id}`;
@@ -1193,42 +1089,19 @@ function updateRecommendations(name) {
       div.innerHTML = `
         <div class="reco-img">${getIcon(r.icon)}</div>
         <div class="reco-detail">
-          ${addonPrice !== null ? `<span class="addon-badge">✦ Add-on Deal</span>` : ''}
           <div class="reco-name">${r.name}</div>
           <div class="reco-desc">${r.desc}</div>
-          <button class="reco-add-btn" id="recobtn-${r.id}" onclick="addReco(${r.id}, ${displayPrice.toFixed(2)})">Add to your order</button>
+          <button class="reco-add-btn" id="recobtn-${r.id}" onclick="addReco(${r.id}, ${r.price.toFixed(2)})">Add to your order</button>
         </div>
         <div class="reco-price-col">
-          ${addonPrice !== null
-            ? `<span class="reco-price-old">£${r.price.toFixed(2)}</span>
-               <span class="reco-addon-price">£${addonPrice.toFixed(2)}</span>`
-            : `${r.old ? `<span class="reco-price-old">£${r.old.toFixed(2)}</span>` : ''}
-               <span class="reco-price-new${!r.old ? ' no-sale' : ''}">£${r.price.toFixed(2)}</span>`
-          }
+          ${r.old ? `<span class="reco-price-old">£${r.old.toFixed(2)}</span>` : ''}
+          <span class="reco-price-new${!r.old ? ' no-sale' : ''}">£${r.price.toFixed(2)}</span>
         </div>
       `;
       recoList.appendChild(div);
     });
 }
 
-
-// ---- MEMBER STATE ----
-const isMember = localStorage.getItem('isMember') === 'true';
-
-// Show member greeting in nav if signed in
-window.addEventListener('DOMContentLoaded', () => {
-  if (isMember) {
-    const email = localStorage.getItem('memberEmail') || '';
-    const signinBtn = document.querySelector('.user-btn');
-    if (signinBtn) {
-      signinBtn.innerHTML = `
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-        <span style="color:var(--tiffany-dark);font-weight:600;">Member</span>`;
-      signinBtn.onclick = null;
-      signinBtn.style.cursor = 'default';
-    }
-  }
-});
 
 // ---- CART LOGIC ----
 let cartQty = 1;
@@ -1254,13 +1127,12 @@ function addToCart(productId) {
 
 
 function renderCartItem(p) {
-  const memberPrice = isMember ? getMemberPrice(p) : null;
-  const displayPrice = memberPrice !== null ? memberPrice : p.price;
   const container = document.getElementById('cartItemsContainer');
   container.innerHTML = `
     <div class="cart-item">
       <div class="cart-item-img">${getIcon(p.icon)}</div>
       <div class="cart-item-detail">
+        
         <div class="cart-item-name">${p.name}</div>
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty(-1)">&#8722;</button>
@@ -1268,7 +1140,7 @@ function renderCartItem(p) {
           <button class="qty-btn" onclick="changeQty(1)">&#43;</button>
         </div>
       </div>
-      <div class="cart-item-price" id="itemPriceDisplay">£${displayPrice.toFixed(2)}</div>
+      <div class="cart-item-price" id="itemPriceDisplay">£${p.price.toFixed(2)}</div>
     </div>
   `;
   updateSubtotal();
@@ -1276,12 +1148,11 @@ function renderCartItem(p) {
 
 function changeQty(delta) {
   cartQty = Math.max(1, cartQty + delta);
-  const memberPrice = isMember ? getMemberPrice(currentProduct) : null;
-  const unitPrice = memberPrice !== null ? memberPrice : currentProduct.price;
   document.getElementById('qtyDisplay').textContent = cartQty;
   document.getElementById('itemPriceDisplay').textContent =
-    '£' + (unitPrice * cartQty).toFixed(2);
-  cartTotal = unitPrice * cartQty;
+    '£' + (currentProduct.price * cartQty).toFixed(2);
+  cartTotal = currentProduct.price * cartQty;
+  // add any reco totals
   recoAdded.forEach(price => { cartTotal += price; });
   updateSubtotal();
 }
@@ -1301,33 +1172,10 @@ function addReco(id, price) {
 }
 
 function updateSubtotal() {
-  if (!currentProduct) return;
-  const memberPrice = isMember ? getMemberPrice(currentProduct) : null;
-  const unitPrice = memberPrice !== null ? memberPrice : currentProduct.price;
-  const originalUnitPrice = currentProduct.price;
-
-  const recoTotal = recoAdded.reduce((a, b) => a + b, 0);
-  const memberTotal = unitPrice * cartQty + recoTotal;
-  const originalTotal = originalUnitPrice * cartQty + recoTotal;
-
-  if (isMember && memberPrice !== null) {
-    // Show 3-line member breakdown
-    document.getElementById('memberGreeting').style.display = 'flex';
-    document.getElementById('memberPriceBreakdown').style.display = 'block';
-    document.getElementById('standardSubtotalRow').style.display = 'none';
-
-    const discount = originalTotal - memberTotal;
-    document.getElementById('breakdownOriginal').textContent = '£' + originalTotal.toFixed(2);
-    document.getElementById('breakdownDiscount').textContent = '−£' + discount.toFixed(2);
-    document.getElementById('breakdownMemberTotal').textContent = '£' + memberTotal.toFixed(2);
-    document.getElementById('subtotalVal').textContent = '£' + memberTotal.toFixed(2);
-  } else {
-    // Standard subtotal
-    document.getElementById('memberGreeting').style.display = 'none';
-    document.getElementById('memberPriceBreakdown').style.display = 'none';
-    document.getElementById('standardSubtotalRow').style.display = 'flex';
-    document.getElementById('subtotalVal').textContent = '£' + memberTotal.toFixed(2);
-  }
+  const total = currentProduct
+    ? currentProduct.price * cartQty + recoAdded.reduce((a, b) => a + b, 0)
+    : 0;
+  document.getElementById('subtotalVal').textContent = '£' + total.toFixed(2);
 }
 
 function updateCartCount() {
@@ -1368,9 +1216,7 @@ function proceedToCheckout() {
     alert("Your cart is empty.");
     return;
   }
-  const memberPrice = isMember ? getMemberPrice(currentProduct) : null;
-  const unitPrice = memberPrice !== null ? memberPrice : currentProduct.price;
-  const total = unitPrice * cartQty + recoAdded.reduce((a, b) => a + b, 0);
+  const total = currentProduct.price * cartQty + recoAdded.reduce((a, b) => a + b, 0);
   
   let recoItems = [];
   document.querySelectorAll('.reco-card .added-reco').forEach(btn => {
@@ -1386,8 +1232,7 @@ function proceedToCheckout() {
     product: currentProduct,
     qty: cartQty,
     reco: recoItems,
-    total: total.toFixed(2),
-    isMember: isMember
+    total: total.toFixed(2)
   };
   localStorage.setItem('cartData', JSON.stringify(cartData));
   window.location.href = 'checkout.html';
