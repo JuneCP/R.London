@@ -122,17 +122,16 @@
 <body>
 
 <nav>
-  <a href="updated_index.html" class="nav-logo">R<span>.</span> London</a>
+  <a href="homepage-member.html" class="nav-logo">R<span>.</span> London</a>
 </nav>
 
 <div class="auth-wrapper">
   <div class="auth-box">
     <h1>Welcome</h1>
     
-    <form onsubmit="event.preventDefault(); signIn();">
-      <!-- 2 Boxes Vertically: Email and Password -->
+    <form onsubmit="event.preventDefault(); window.location.href='homepage-member.html';">
       <div class="input-group">
-        <input type="email" id="emailInput" placeholder="Email Address" required />
+        <input type="email" placeholder="Email Address" required />
       </div>
       <div class="input-group">
         <input type="password" placeholder="Password" required />
@@ -140,11 +139,9 @@
       <button type="submit" class="submit-btn">Continue</button>
     </form>
     
-    <!-- Or connect with text -->
     <div class="divider"><span>or connect with</span></div>
     
-    <!-- Sign up with Google -->
-    <button class="social-btn" type="button" onclick="socialSignIn()">
+    <button class="social-btn" type="button" onclick="window.location.href='homepage-member.html';">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.67 15.63 16.89 16.81 15.73 17.58V20.35H19.3C21.39 18.43 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
         <path d="M12 23C14.97 23 17.46 22.02 19.3 20.35L15.73 17.58C14.73 18.25 13.48 18.66 12 18.66C9.13 18.66 6.71 16.72 5.84 14.13H2.17V16.98C4.01 20.64 7.72 23 12 23Z" fill="#34A853"/>
@@ -154,8 +151,7 @@
       Sign up with Google
     </button>
     
-    <!-- Sign up with Facebook -->
-    <button class="social-btn" type="button" onclick="socialSignIn()">
+    <button class="social-btn" type="button" onclick="window.location.href='homepage-member.html';">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M24 12.073C24 5.405 18.627 0 12 0C5.373 0 0 5.405 0 12.073C0 18.106 4.418 23.094 10.125 24V15.562H7.078V12.073H10.125V9.412C10.125 6.388 11.916 4.717 14.658 4.717C15.97 4.717 17.344 4.952 17.344 4.952V7.933H15.831C14.34 7.933 13.875 8.868 13.875 9.828V12.073H17.203L16.671 15.562H13.875V24C19.582 23.094 24 18.106 24 12.073Z" fill="#1877F2"/>
         <path d="M16.671 15.562L17.203 12.073H13.875V9.828C13.875 8.868 14.34 7.933 15.831 7.933H17.344V4.952C17.344 4.952 15.97 4.717 14.658 4.717C11.916 4.717 10.125 6.388 10.125 9.412V12.073H7.078V15.562H10.125V24C10.742 24.095 11.368 24.146 12 24.146C12.632 24.146 13.258 24.095 13.875 24V15.562H16.671Z" fill="white"/>
@@ -164,20 +160,6 @@
     </button>
   </div>
 </div>
-
-<script>
-  function signIn() {
-    const email = document.getElementById('emailInput').value;
-    localStorage.setItem('isMember', 'true');
-    localStorage.setItem('memberEmail', email);
-    window.location.href = 'homepage.html';
-  }
-  function socialSignIn() {
-    localStorage.setItem('isMember', 'true');
-    localStorage.setItem('memberEmail', 'member@r-london.com');
-    window.location.href = 'homepage.html';
-  }
-</script>
 
 </body>
 </html>
