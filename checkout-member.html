@@ -1,1 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout — R. London (Member)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --tiffany:       #81D8D0;
+    --tiffany-deep:  #4BBFB8;
+    --tiffany-light: #C2EEEB;
+    --tiffany-pale:  #EAF8F7;
+    --tiffany-dark:  #2A9D97;
+    --ink:           #1C2B2A;
+    --ink-mid:       #3D5250;
+    --ink-soft:      #6B8886;
+    --white:         #FFFFFF;
+    --off-white:     #F5FBFA;
+    --border:        #D4EFED;
+  }
+  
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Jost', sans-serif;
+    background-color: var(--off-white);
+    color: var(--ink);
+    padding-top: 80px;
+  }
+  
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; height: 70px;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5%; z-index: 100;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; font-weight: 500; color: var(--ink);
+    text-decoration: none; letter-spacing: 0.02em;
+  }
+  .nav-logo span { color: var(--tiffany-deep); }
+  .user-badge {
+    display: flex; align-items: center; gap: 6px; 
+    font-family: 'Jost', sans-serif; font-size: 14px; color: var(--ink);
+  }
+  
+  .container {
+    max-width: 1000px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 0 5%;
+  }
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+  }
 
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    margin-bottom: 24px;
+    font-weight: 500;
+  }
+
+  /* ORDER SUMMARY */
+  .box {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 30px rgba(129,216,208,0.08);
+  }
+  
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .item-name { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+  .item-qty { color: var(--ink-soft); font-size: 13px; }
+  .item-price { font-weight: 500; }
+  
+  /* PRICE BREAKDOWN */
+  .price-breakdown {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border);
+  }
+  .breakdown-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 15px;
+  }
+  .breakdown-row.original { color: var(--ink-soft); }
+  .breakdown-row.original .breakdown-val { text-decoration: line-through; }
+  .breakdown-row.discount { color: #C0392B; font-weight: 500; }
+  .breakdown-row.member-total {
+    margin-top: 8px; padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-weight: 700; font-size: 20px; color: var(--ink);
+  }
+
+  /* PAYMENT METHODS */
+  .payment-method {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .payment-method:hover {
+    background: var(--tiffany-pale);
+    border-color: var(--tiffany);
+  }
+  .payment-method input[type="radio"] {
+    margin-right: 16px;
+    accent-color: var(--tiffany-dark);
+    width: 18px;
+    height: 18px;
+  }
+  .payment-label {
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pay-btn {
+    width: 100%;
+    padding: 16px;
+    margin-top: 24px;
+    background: var(--tiffany-dark);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: background 0.2s;
+  }
+  .pay-btn:hover {
+    background: var(--tiffany-deep);
+  }
+  
+  .back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .back-link:hover { color: var(--ink); }
+
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="homepage-member.html" class="nav-logo">R<span>.</span> London</a>
+  <div class="user-badge">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <span style="color:var(--tiffany-dark);font-weight:600;">User ABC</span>
+  </div>
+</nav>
+
+<div class="container">
+  <div>
+    <h2 class="section-title">Order Summary</h2>
+    <div class="box" id="orderSummary">
+      <p id="emptyCartMsg" style="display:none;">Your cart is empty.</p>
+      
+      <div id="cartItemsList"></div>
+      
+      <div class="price-breakdown" id="totalRow" style="display:none;">
+        <div class="breakdown-row original">
+          <span>Original Price</span>
+          <span class="breakdown-val" id="breakdownOriginal">£0.00</span>
+        </div>
+        <div class="breakdown-row discount">
+          <span>Member Discount</span>
+          <span class="breakdown-val" id="breakdownDiscount">−£0.00</span>
+        </div>
+        <div class="breakdown-row member-total">
+          <span>Your Price</span>
+          <span class="breakdown-val" id="breakdownMemberTotal">£0.00</span>
+        </div>
+      </div>
+    </div>
+    <a href="homepage-member.html" class="back-link">&larr; Return to shop</a>
+  </div>
+
+  <div>
+    <h2 class="section-title">Payment</h2>
+    <div class="box">
+      <form id="paymentForm">
+        <label class="payment-method">
+          <input type="radio" name="payment" value="credit" checked>
+          <span class="payment-label">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            Credit / Debit Card
+          </span>
+        </label>
+        
+        <label class="payment-method">
+          <input type="radio" name="payment" value="paypal">
+          <span class="payment-label">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00457C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.144 19.532l1.049-5.751c.11-.606.691-1.002 1.304-1.002h2.527c2.892 0 4.742-1.373 5.253-4.103.228-1.226.064-2.285-.544-3.056C16.14 4.862 14.773 4 12.87 4H8.641c-.613 0-1.194.396-1.304 1.002L4.698 19.532h2.446z"></path><path d="M10.36 19.532l1.049-5.751c.11-.606.691-1.002 1.304-1.002h2.527c2.892 0 4.742-1.373 5.253-4.103M13.623 6.138h-4.982c-.613 0-1.194.396-1.304 1.002L4.698 19.532"></path></svg>
+            PayPal
+          </span>
+        </label>
+
+        <label class="payment-method">
+          <input type="radio" name="payment" value="applepay">
+          <span class="payment-label">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.938A8 8 0 1 0 12 4.938a8 8 0 0 0 0 16z"></path><path d="M12 11.938v4"></path><path d="M10 13.938h4"></path></svg>
+            Apple Pay
+          </span>
+        </label>
+        
+        <label class="payment-method">
+          <input type="radio" name="payment" value="googlepay">
+          <span class="payment-label">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.438h-9v3.52h5.139A4.475 4.475 0 0 1 12.562 19.063v3.136h6.818c3.98-3.666 3.98-9.761 1.62-13.761z"></path><path d="M12.562 4.938v3.136a4.475 4.475 0 0 1 4.577 3.104h5.139c-2.36-4-2.36-10.095 1.62-13.761H12.562z"></path></svg>
+            Google Pay
+          </span>
+        </label>
+
+        <button type="button" class="pay-btn" onclick="processPayment()">Pay <span id="payBtnTotal"></span></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    const dataStr = localStorage.getItem('cartData');
+    if (!dataStr) {
+      document.getElementById('emptyCartMsg').style.display = 'block';
+      document.querySelector('.pay-btn').disabled = true;
+      return;
+    }
+    
+    const cartData = JSON.parse(dataStr);
+    const list = document.getElementById('cartItemsList');
+    
+    let originalTotal = 0;
+    let memberTotal = parseFloat(cartData.total);
+    
+    // Add Main Product
+    if (cartData.product) {
+      const p = cartData.product;
+      const originalSubtotal = p.price * cartData.qty;
+      originalTotal += originalSubtotal;
+      
+      list.innerHTML += `
+        <div class="cart-item">
+          <div>
+            <div class="item-name">${p.name}</div>
+            <div class="item-qty">Qty: ${cartData.qty}</div>
+          </div>
+          <div class="item-price">£${originalSubtotal.toFixed(2)}</div>
+        </div>
+      `;
+    }
+    
+    // Add Recommendations
+    if (cartData.reco && cartData.reco.length > 0) {
+      cartData.reco.forEach(r => {
+        originalTotal += r.price;
+        list.innerHTML += `
+          <div class="cart-item">
+            <div>
+              <div class="item-name">${r.name}</div>
+              <div class="item-qty">Qty: 1</div>
+            </div>
+            <div class="item-price">£${r.price.toFixed(2)}</div>
+          </div>
+        `;
+      });
+    }
+    
+    const discountAmount = originalTotal - memberTotal;
+    
+    document.getElementById('totalRow').style.display = 'block';
+    document.getElementById('breakdownOriginal').textContent = '£' + originalTotal.toFixed(2);
+    document.getElementById('breakdownDiscount').textContent = '−£' + discountAmount.toFixed(2);
+    document.getElementById('breakdownMemberTotal').textContent = '£' + memberTotal.toFixed(2);
+    document.getElementById('payBtnTotal').textContent = '£' + memberTotal.toFixed(2);
+  };
+  
+  function processPayment() {
+    const selected = document.querySelector('input[name="payment"]:checked').value;
+    alert("Processing " + selected + " payment... Thank you for your purchase!");
+    localStorage.removeItem('cartData');
+    window.location.href = 'homepage-member.html';
+  }
+</script>
+
+</body>
+</html>
